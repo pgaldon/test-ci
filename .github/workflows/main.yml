@@ -11,4 +11,4 @@ jobs:
 
       - name: "Print counter"
         run: |
-          echo ${{ env.COUNTER }}
+          echo ${{ vars.COUNTER }}
