@@ -10,4 +10,8 @@ jobs:
 
       - name: "Print counter"
         run: |
-          env
+          env | sort
+          
+      - name: "Print counter"
+        run: |
+          echo ${{ vars.COUNTER }}
