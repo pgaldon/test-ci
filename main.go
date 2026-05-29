@@ -6,6 +6,7 @@ import (
 	"html"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -13,7 +14,7 @@ import (
 func main() {
 	ctx := context.Background()
 	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: os.Getenv("REDIS_URL"),
 		DB:   0})
 
 	result := client.Ping(ctx)
@@ -24,7 +25,7 @@ func main() {
 		panic(err)
 	}
 
-	val, err := client.Get(ctx, "foooooo").Result()
+	val, err := client.Get(ctx, "fooo").Result()
 	if err != nil {
 		panic(err)
 	}
