@@ -2,44 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-test-ci
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: redis-test-ci
-  template:
-    metadata:
-      labels:
-        app: redis-test-ci
-    spec:
-      containers:      
-      - name: redis-test-ci
-        image: redis:latest
-        ports:
-        - containerPort: 6379
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis-test-ci
-  namespace: default
-spec:
-  selector:
-    app: redis-test-ci
-  ports:
-  - name: redis
-    protocol: TCP
-    port: 6379
-    targetPort: 6379
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: test-ci
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: test-ci
@@ -50,7 +15,8 @@ spec:
     spec:
       containers:      
       - name: test-ci
-        image: praxamos/test-ci:2502f6533b8fe932399770b60bb4afd5f1cae06b
+        image: praxamos/test-ci:61c5cb6046d1ebd88ec41381ed7a15ca5271f495
+        command: ["./webapp"]
         env:
         - name: REDIS_URL
           value: redis-test-ci:6379
@@ -60,13 +26,38 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-test-ci
+  name: test-ci
   namespace: default
 spec:
   selector:
-    app: redis-test-ci
+    app: test-ci
   ports:
-  - name: redis
+  - name: web
     protocol: TCP
     port: 8080
     targetPort: 8080    
+---    
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-ci
+  namespace: "default"
+  labels:
+    app: test-ci
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - "test-ci.galdon.casa"
+      secretName: wildcard-galdon-casa-tls
+  rules:
+    - host: "test-ci.galdon.casa"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: test-ci
+                port:
+                  name: web    
