@@ -1,7 +1,8 @@
-FROM docker.io/library/golang:1.26.3-bookworm as builder
+FROM docker.io/library/golang:1.26.3-bookworm AS builder
 COPY . /go/src
 WORKDIR /go/src
 RUN CGO_ENABLED=0 go build .
+RUN ls -la
 
 # Runtime
 # -------

@@ -1,4 +1,4 @@
-module sg.test
+module test-ci
 
 go 1.26.3
 
