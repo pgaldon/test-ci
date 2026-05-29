@@ -11,7 +11,6 @@ RUN CGO_ENABLED=0 go build .
 # Runtime
 # -------
 
-FROM docker.io/library/golang:1.26.3-bookworm
+FROM scratch
 COPY --from=webappbuilder /go/src/webapp /
 COPY --from=autodeploybuilder /go/src/autodeploy /
-RUN ls -la ./*

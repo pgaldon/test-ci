@@ -15,7 +15,7 @@ spec:
     spec:
       containers:      
       - name: test-ci
-        image: praxamos/test-ci:61c5cb6046d1ebd88ec41381ed7a15ca5271f495
+        image: praxamos/test-ci:fc539e91c87131674bfe14aa52258f0a8c3685ee
         command: ["./webapp"]
         env:
         - name: REDIS_URL
